@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useRefValue } from '@/use/fetch'
+import { useRefValue } from '@/use/ref'
 
 const emit = defineEmits(['update:modelValue', 'blur', 'change'])
 type TInputType = 'text' | 'password' | 'number' | 'email'
@@ -8,22 +8,19 @@ interface IVInput {
   modelValue?: string | number
   label?: string
   name?: string
-  isDisabled?: boolean
-  placeholder?: string
-  inputType?: TInputType
-  error?: string
+  type?: TInputType
 }
 
 const props = withDefaults(defineProps<IVInput>(), {
   modelValue: '',
-  inputType: 'text',
-  placeholder: ''
+  type: 'text',
 })
 
 const { value: inputValue, setValue } = useRefValue(props.modelValue)
 
 function onInput(event: Event) {
-  const value = getValue(event)
+  const target = event.target as HTMLInputElement
+  const value = props.type === 'number' ? +target.value : target.value
   setValue(value)
 
   emit('update:modelValue', value)
@@ -36,26 +33,16 @@ function onBlur() {
 function onChange() {
   emit('change', inputValue.value)
 }
-
-function getValue(event: Event) {
-  const target = event.target as HTMLInputElement
-  return target.value.trim()
-}
 </script>
 
 <template>
-  <!-- <label v-if="label" class="form-label" :for="name">
-    {{ label }}
-  </label> -->
   <input
-    ref="input"
     :value="modelValue"
     class="form-control"
-    :type="inputType"
+    :type="type"
     :name="name"
-    :placeholder="placeholder"
-    :disabled="isDisabled"
     autocomplete="false"
+    placeholder=''
     @input="onInput"
     @blur="onBlur"
     @change="onChange"

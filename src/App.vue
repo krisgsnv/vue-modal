@@ -3,41 +3,132 @@ import { Input } from '@/components/Input'
 import { Select } from '@/components/Select'
 import { Form } from '@/components/Form'
 
-const onSubmit = (e?: Event) => {
-  const formData = new FormData(e?.target as HTMLFormElement)
-  const dataArray = [...formData]
-  const data = Object.fromEntries(dataArray)
-  console.log(data)
-}
-
 const data = [
+  {
+    type: Select,
+    props: {
+      label: 'Менеджер',
+      name: 'manager',
+      value: '',
+      options: [
+        {
+          label: 'Нет пользователя',
+          props: {
+            selected: true,
+            disabled: true,
+            value: ''
+          }
+        },
+        {
+          label: 'Пользователь',
+          props: {
+            value: 'user1'
+          }
+        }
+      ]
+    }
+  },
   {
     type: Input,
     props: {
-      label: 'Имя',
-      name: 'name'
+      label: 'Название продукта',
+      name: 'productName',
+      value: ''
+    }
+  },
+  {
+    type: Input,
+    props: {
+      label: 'Ссылка в Jira',
+      name: 'jiraLink',
+      additionalText: 'Ссылка в jira, включая https://',
+      value: ''
     }
   },
   {
     type: Select,
     props: {
-      label: 'Возраст',
-      name: 'age'
+      label: 'Домен',
+      name: 'domen',
+      value: '',
+      options: [
+        {
+          label: 'Не выбрано',
+          props: {
+            selected: true,
+            disabled: true,
+            value: ''
+          }
+        },
+        { label: 'Бэк-офис', props: { value: 'back-office' } },
+        {
+          label: 'Техплатформа',
+          props: { value: 'tech-platform' }
+        },
+        {
+          label: 'Офис больших данных',
+          props: { value: 'bigdata-office' }
+        },
+        {
+          label: 'Цифровой опыт поставщика',
+          props: { value: 'provider-experience' }
+        }
+      ]
     }
   }
 ]
+
+const data2 = [
+  {
+    type: Input,
+    props: {
+      label: 'Процент капитализации',
+      name: 'capitalization',
+      type: 'number',
+      value: 0,
+      min: 0,
+      max: 100,
+      step: 1
+    }
+  },
+  {
+    type: Input,
+    props: {
+      label: 'Должность',
+      name: 'position',
+      value: ''
+    }
+  }
+]
+const onSubmit = () => {
+  console.log(
+    Object.fromEntries(
+      data2.map(({ props }) => {
+        const { name, value } = props
+        return [name, value ]
+      })
+    )
+  )
+}
 </script>
 
 <template>
   <main>
-    <Form :handler-submit="onSubmit">
-      <div v-for="item in data" :key="item.props.name" class="form-floating mt-2">
-        <component :is="item.type" v-bind="item.props" />
-        <label v-if="item.props.name" class="form-label" :for="item.props.name">
-          {{ item.props.label }}
-        </label>
-      </div>
-      <input type="number" class="form-control" name="gender" />
-    </Form>
+    <Form :handler-submit="onSubmit" :fields="data2" />
   </main>
 </template>
+
+<style>
+.label {
+  color: rgba(var(--bs-body-color-rgb), 0.65);
+}
+.form-text {
+  font-size: 0.8em;
+  margin-left: 1em;
+}
+.form-select,
+.form-control,
+.form-label {
+  font-size: 0.9em;
+}
+</style>

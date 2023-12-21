@@ -1,37 +1,48 @@
 <script lang="ts" setup>
-import { useRefValue } from '@/use/fetch'
+import { useRefValue } from '@/use/ref'
 
-const emit = defineEmits(['update:modelValue', 'blur', 'change'])
-type TInputType = 'text' | 'password' | 'number' | 'email'
+interface IOption {
+  label: string
+  props: {
+    value: string | number
+    selected?: boolean
+    disabled?: boolean
+  }
+}
 
-interface IVInput {
+interface ISelect {
   modelValue?: string | number
   label?: string
   name?: string
   isDisabled?: boolean
   placeholder?: string
-  inputType?: TInputType
-  error?: string
+  options: IOption[]
 }
 
-const props = withDefaults(defineProps<IVInput>(), {
-  modelValue: 'mike',
-  inputType: 'text',
-  placeholder: ''
+const props = withDefaults(defineProps<ISelect>(), {
+  modelValue: ''
 })
 
-const { value: inputValue } = useRefValue(props.modelValue)
+const emit = defineEmits(['update:modelValue', 'change'])
+const { value: inputValue, setValue } = useRefValue(props.modelValue)
 
-function onChange() {
+function onChange(event: Event) {
+  const target = event.target as HTMLInputElement
+  setValue(target.value)
+
   emit('change', inputValue.value)
+  emit('update:modelValue', target.value)
 }
 </script>
 
 <template>
   <select class="form-select" :name="name" :value="modelValue" @change="onChange">
-    <option selected value="mike">Mike</option>
-    <option value="1">One</option>
-    <option value="2">Two</option>
-    <option value="3">Three</option>
+    <option
+      v-for="{ label, props } in options"
+      :key="label"
+      v-bind="props"
+    >
+      {{ label }}
+    </option>
   </select>
 </template>
