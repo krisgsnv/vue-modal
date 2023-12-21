@@ -1,0 +1,24 @@
+.form {
+  &__buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  &__fields {
+    display: grid;
+    gap: 8px;
+    @for $i from 1 through 10 {
+      &_cols-#{$i} {
+        grid-template-columns: repeat($i, 1fr);
+      }
+    }
+  }
+  &__label {
+    color: rgba(var(--bs-body-color-rgb), 0.65);
+  }
+  &__text {
+    font-size: 0.8em;
+    margin-left: 1em;
+  }
+}
+

@@ -1,25 +1,8 @@
 <script lang="ts" setup>
+import type { ISelectProps } from '@/types/Select';
 import { useRefValue } from '@/use/ref'
 
-interface IOption {
-  label: string
-  props: {
-    value: string | number
-    selected?: boolean
-    disabled?: boolean
-  }
-}
-
-interface ISelect {
-  modelValue?: string | number
-  label?: string
-  name?: string
-  isDisabled?: boolean
-  placeholder?: string
-  options: IOption[]
-}
-
-const props = withDefaults(defineProps<ISelect>(), {
+const props = withDefaults(defineProps<ISelectProps>(), {
   modelValue: ''
 })
 

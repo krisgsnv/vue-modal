@@ -1,19 +1,18 @@
 <script lang="ts" setup>
 import { useRefValue } from '@/use/ref'
 
-const emit = defineEmits(['update:modelValue', 'blur', 'change'])
-type TInputType = 'text' | 'password' | 'number' | 'email'
-
-interface IVInput {
+interface IInputProps {
   modelValue?: string | number
   label?: string
   name?: string
-  type?: TInputType
+  type?: 'text' | 'password' | 'number' | 'email'
 }
 
-const props = withDefaults(defineProps<IVInput>(), {
+const emit = defineEmits(['update:modelValue', 'change'])
+
+const props = withDefaults(defineProps<IInputProps>(), {
   modelValue: '',
-  type: 'text',
+  type: 'text'
 })
 
 const { value: inputValue, setValue } = useRefValue(props.modelValue)
@@ -24,10 +23,6 @@ function onInput(event: Event) {
   setValue(value)
 
   emit('update:modelValue', value)
-}
-
-function onBlur() {
-  emit('blur', inputValue.value)
 }
 
 function onChange() {
@@ -42,13 +37,8 @@ function onChange() {
     :type="type"
     :name="name"
     autocomplete="false"
-    placeholder=''
+    placeholder=""
     @input="onInput"
-    @blur="onBlur"
     @change="onChange"
   />
 </template>
-
-<style lang="scss">
-@import 'styles';
-</style>
