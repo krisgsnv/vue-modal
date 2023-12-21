@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useRefValue } from '@/use/ref'
 
-interface IOptionProps {
+export interface IOptionProps {
   label: string
   props: {
     value: string | number
